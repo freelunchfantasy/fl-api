@@ -1,0 +1,14 @@
+{
+    "development": {
+        "bodyLimit": "100kb",
+        "corsHeaders": ["Link"],
+        "allowedOrigins": [
+            "http://localhost:4200",
+            "http://localhost:1337"
+        ],
+        "tokenExpiration": 3600000,
+        "cookieDomain": ".dictionordle.com",
+        "secureCookie": false,
+        "cookieTokenAttribute": "token"
+    }
+}
