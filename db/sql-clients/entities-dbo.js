@@ -1,7 +1,6 @@
 import sql from 'mssql';
 import { configDotenv } from 'dotenv';
 import QueryHelper from '../../helpers/query-helper.js';
-import WordInfoHelper from '../../helpers/word-info-helper.js';
 
 export default class EntitiesDbo {
   static instance_;
@@ -17,7 +16,6 @@ export default class EntitiesDbo {
       database: process.env.DB_DATABASE,
     };
     this.queryHelper = new QueryHelper();
-    this.WordInfoHelper = new WordInfoHelper();
   }
 
   /**

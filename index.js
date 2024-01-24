@@ -8,9 +8,7 @@ import bodyParser from 'body-parser';
 import { getConfig } from './config.js';
 
 // dictionordle routes
-import { authRoutes } from './routes/auth/index.js';
-import { internalRoutes } from './routes/internal/index.js';
-import { gameRoutes } from './routes/game/index.js';
+import { appRoutes } from './routes/app/index.js';
 
 const appConfig = getConfig(process.env.NODE_ENV);
 
@@ -22,17 +20,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 var jsonParser = bodyParser.json();
 
-// Auth routes
-const authRouter = authRoutes(jsonParser);
-app.use('/auth', authRouter);
-
-// Internal routes
-const internalRouter = internalRoutes(jsonParser);
-app.use('/internal', internalRouter);
-
-// Game routes
-const gameRouter = gameRoutes(jsonParser);
-app.use('/game', gameRouter);
+// App routes
+const appRouter = appRoutes(jsonParser);
+app.use('/app', appRouter);
 
 // Launch API on port 3000
 const port = process.env.PORT || 3000;
