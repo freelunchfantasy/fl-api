@@ -39,6 +39,8 @@ for team in l.teams:
         p['position'] = player.position
         p['projectedTotalPoints'] = player.projected_total_points
         p['projectedAveragePoints'] = player.projected_avg_points
+        p['percentStarted'] = player.percent_started
+        #p['stats'] = player.stats
 
         # add player to team's roster
         players.append(p)
