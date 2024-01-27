@@ -27,6 +27,8 @@ for team in l.teams:
     t['wins'] = team.wins
     t['losses'] = team.losses
     t['ties'] = team.ties
+    t['pointsFor'] = team.points_for
+    t['pointsAgainst'] = team.points_against
     
     # team's roster
     players = []
