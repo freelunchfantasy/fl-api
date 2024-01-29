@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 import { getConfig } from './config.js';
 
 // dictionordle routes
-import { appRoutes } from './routes/app/index.js';
+import { leagueRoutes } from './routes/league/index.js';
 
 const appConfig = getConfig(process.env.NODE_ENV);
 
@@ -21,8 +21,8 @@ app.use(cors(corsOptions));
 var jsonParser = bodyParser.json();
 
 // App routes
-const appRouter = appRoutes(jsonParser);
-app.use('/app', appRouter);
+const leagueRouter = leagueRoutes(jsonParser);
+app.use('/league', leagueRouter);
 
 // Launch API on port 3000
 const port = process.env.PORT || 3000;
