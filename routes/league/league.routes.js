@@ -1,4 +1,8 @@
 import { spawn } from 'child_process';
+import SimulationHelper from '../../helpers/simulation-helper.js';
+
+// Local instances
+const simulationHelper = new SimulationHelper();
 
 /**
  * Method for getting ESPN league by ID
@@ -24,4 +28,25 @@ export async function getLeague(req, res, next) {
       next();
     })
     .catch(err => next(err));
+}
+
+/**
+ * Method for simulating a league's ROS games
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
+export async function simulateLeague(req, res, next) {
+  const { id, teams, schedule } = req.body;
+  console.log(`Received request to simulate league with id: ${id}`);
+
+  simulationHelper
+    .simulateLeague(teams, schedule)
+    .then(result => {
+      res.json({ id, teamResults: result });
+      next();
+    })
+    .catch(err => {
+      next(err);
+    });
 }

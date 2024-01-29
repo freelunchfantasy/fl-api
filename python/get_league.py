@@ -17,7 +17,6 @@ settings["scoringType"] = l.settings.scoring_type
 settings["scoringFormat"] = l.settings.scoring_format
 league['settings'] = settings
 
-
 # teams
 teams = []
 for team in l.teams:
@@ -29,6 +28,9 @@ for team in l.teams:
     t['ties'] = team.ties
     t['pointsFor'] = team.points_for
     t['pointsAgainst'] = team.points_against
+    t['scores'] = team.scores
+    t['outcomes'] = team.outcomes
+    t['schedule'] = [opponent.team_id for opponent in team.schedule]
     
     # team's roster
     players = []
