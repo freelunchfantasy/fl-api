@@ -3,12 +3,11 @@
         "bodyLimit": "100kb",
         "corsHeaders": ["Link"],
         "allowedOrigins": [
-            "http://localhost:4200",
-            "http://localhost:1337"
+            "http://localhost:4200"
         ],
         "tokenExpiration": 3600000,
         "cookieDomain": ".freelunchfantasy.com",
         "secureCookie": false,
-        "cookieTokenAttribute": "token"
+        "cookieTokenAttribute": "session"
     }
 }

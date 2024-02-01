@@ -1,7 +1,7 @@
 import Router from 'express';
 import { getLeague, simulateLeague } from './league.routes.js';
 
-export function leagueRoutes(bodyParser) {
+export default bodyParser => {
   const router = Router();
 
   // POST request for retrieving user's league
@@ -11,4 +11,4 @@ export function leagueRoutes(bodyParser) {
   router.post('/simulate', bodyParser, simulateLeague);
 
   return router;
-}
+};
