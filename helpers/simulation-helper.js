@@ -15,7 +15,7 @@ export default class SimulationHelper {
       });
       setTimeout(() => {
         resolve(result);
-      }, 1000);
+      }, 10000);
     });
   }
 }
