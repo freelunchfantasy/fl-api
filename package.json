@@ -1,5 +1,5 @@
 {
-  "name": "dictionordle-api",
+  "name": "freelunch-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -21,6 +21,7 @@
     "joi": "^13.2.0",
     "mssql": "^9.1.1",
     "pm2": "5.3.0",
+    "uuid": "^9.0.1",
     "winston": "^3.9.0"
   }
 }

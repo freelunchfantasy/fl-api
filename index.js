@@ -7,8 +7,9 @@ import bodyParser from 'body-parser';
 // config and middleware
 import { getConfig } from './config.js';
 
-// dictionordle routes
+// FreeLunch routes
 import { leagueRoutes } from './routes/league/index.js';
+import { authRoutes } from './routes/auth/index.js';
 
 const appConfig = getConfig(process.env.NODE_ENV);
 
@@ -20,12 +21,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 var jsonParser = bodyParser.json();
 
-// App routes
+// LEAGUE router
 const leagueRouter = leagueRoutes(jsonParser);
 app.use('/league', leagueRouter);
+
+// AUTH router
+const authRouter = authRoutes(jsonParser);
+app.use('/auth', authRouter);
 
 // Launch API on port 3000
 const port = process.env.PORT || 3000;
 app.listen(port, function () {
-  console.log(`Dictionordle API is listening on port ${port}`);
+  console.log(`FreeLunch API is listening on port ${port}`);
 });

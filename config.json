@@ -7,7 +7,7 @@
             "http://localhost:1337"
         ],
         "tokenExpiration": 3600000,
-        "cookieDomain": ".dictionordle.com",
+        "cookieDomain": ".freelunchfantasy.com",
         "secureCookie": false,
         "cookieTokenAttribute": "token"
     }

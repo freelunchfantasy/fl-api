@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'dictionordle-api',
+      name: 'freelunch-api',
       script: './index.js',
       watch: true,
       env: {
