@@ -31,3 +31,8 @@ export async function register(req, res, next) {
     next();
   }, 1000);
 }
+
+export async function sendContactEmail(req, res, next) {
+  res.json({ message: 'nice o' });
+  next();
+}
