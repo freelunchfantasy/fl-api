@@ -6,7 +6,7 @@ import league from './league/index.js';
 
 var jsonParser = bodyParser.json();
 
-export default preRequestMiddlewareFn => {
+export default (preRequestMiddlewareFn, postRequestMiddlewareFn) => {
   let api = Router();
 
   preRequestMiddlewareFn(api);
@@ -15,5 +15,6 @@ export default preRequestMiddlewareFn => {
   const leagueEndpoints = league(jsonParser);
   api.use('/league', leagueEndpoints);
 
+  postRequestMiddlewareFn(api);
   return api;
 };

@@ -1,14 +1,15 @@
 import Router from 'express';
-import { getLeague, simulateLeague } from './league.routes.js';
+import league from './league.routes.js';
 
 export default bodyParser => {
-  const router = Router();
+  const api = Router();
+  const leagueFunctions = league();
 
   // POST request for retrieving user's league
-  router.post('/get-league', bodyParser, getLeague);
+  api.post('/get-league', bodyParser, leagueFunctions.getLeague);
 
   // POST request for simulating a league's ROS games
-  router.post('/simulate', bodyParser, simulateLeague);
+  api.post('/simulate', bodyParser, leagueFunctions.simulateLeague);
 
-  return router;
+  return api;
 };
