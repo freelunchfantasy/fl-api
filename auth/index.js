@@ -4,7 +4,7 @@ import { login, register, sendContactEmail } from './auth.routes.js';
 
 var jsonParser = bodyParser.json();
 
-export default preRequestMiddlewareFn => {
+export default (preRequestMiddlewareFn, postRequestMiddlewareFn) => {
   const auth = Router();
 
   preRequestMiddlewareFn(auth);
@@ -18,5 +18,6 @@ export default preRequestMiddlewareFn => {
   // POST request for sending contact email
   auth.post('/send-contact-email', jsonParser, sendContactEmail);
 
+  postRequestMiddlewareFn(auth);
   return auth;
 };
