@@ -19,6 +19,39 @@ export default class EntitiesDbo {
     this.queryHelper = new QueryHelper();
   }
 
+  getUserLeagues(userId) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.getUserLeaguesQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.input('userId', sql.Int, userId);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset);
+        });
+      });
+    });
+  }
+
+  saveNewUserLeague(userId, externalLeagueId, leagueName, userTeamId) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.insertNewUserLeagueQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.input('userId', sql.Int, userId);
+        request.input('externalLeagueId', sql.Int, externalLeagueId);
+        request.input('leagueName', sql.VarChar, leagueName);
+        request.input('userTeamId', sql.Int, userTeamId);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset[0]);
+        });
+      });
+    });
+  }
+
   insertUser(email, password, firstName, lastName) {
     return new Promise((resolve, reject) => {
       const query = this.queryHelper.insertUserQuery();
@@ -49,7 +82,10 @@ export default class EntitiesDbo {
         request.input('email', sql.VarChar, email);
         request.input('password', sql.VarChar, password);
         request.query(query, (err, recordset) => {
-          if (err) reject(err);
+          if (err) {
+            logger.info(`Unexpected error during u+p login: ${err}`);
+            reject(new Error('Server error occurred during login'));
+          }
           if (recordset.recordset.length == 0) reject(new Error('Invalid credentials'));
           resolve(recordset.recordset[0]);
         });
@@ -65,7 +101,10 @@ export default class EntitiesDbo {
         var request = new sql.Request();
         request.input('id', sql.Int, id);
         request.query(query, (err, recordset) => {
-          if (err) reject(err);
+          if (err) {
+            logger.info(`Unexpected error during u+p login: ${err}`);
+            reject(new Error('Server error occurred during login'));
+          }
           if (recordset.recordset.length == 0) reject(new Error('Could not find user id encoded in jwt'));
           resolve(recordset.recordset[0]);
         });

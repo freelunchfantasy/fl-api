@@ -4,6 +4,7 @@ export default logger => {
   const dbo = new EntitiesDbo();
 
   function updateLastActivity(req, res, next) {
+    if (!(req.user && req.user.id)) return next();
     dbo
       .updateUserLastActivity(req.user.id)
       .then(result => {

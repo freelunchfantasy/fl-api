@@ -4,7 +4,7 @@ import sys
 import json
 
 leagueId = sys.argv[1]
-l = League(league_id=leagueId, year=2023)
+l = League(league_id=leagueId, year=2024)
 
 league = {}
 league['leagueId'] = l.league_id

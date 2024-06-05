@@ -28,14 +28,12 @@ export async function login(req, res, next) {
         user.sessionToken = encodeSessionJwt(user);
         logger.info(`Successfully logged in user ${user.id}`);
         req['user'] = { id: user.id };
-        res.json(user);
+        res.json({ user: user, success: true });
         return next();
       })
       .catch(err => {
-        const errorMessage = `Could not log user in. Error: ${err}`;
-        logger.info(errorMessage);
-        res.sendStatus(500);
-        res.json({ message: errorMessage });
+        logger.info(`Could not log user in - ${err}`);
+        res.json({ error: `${err}`, success: false });
         return next();
       });
   } else {
@@ -49,14 +47,12 @@ export async function login(req, res, next) {
         user.sessionToken = encodeSessionJwt(user);
         logger.info(`Successfully logged in user ${user.id}`);
         req['user'] = { id: user.id };
-        res.json(user);
+        res.json({ user: user, success: true });
         return next();
       })
       .catch(err => {
-        const errorMessage = `Could not log user in. Error: ${err}`;
-        logger.info(errorMessage);
-        res.sendStatus(500);
-        res.json({ message: errorMessage });
+        logger.info(`Could not log user in - ${err}`);
+        res.json({ error: `${err}`, success: false });
         return next();
       });
   }

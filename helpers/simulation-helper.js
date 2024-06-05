@@ -18,4 +18,14 @@ export default class SimulationHelper {
       }, 1000);
     });
   }
+
+  async simulateTrade(leagueVersion) {
+    return new Promise(async (resolve, reject) => {
+      let tradeResults = {
+        before: await this.simulateLeague(leagueVersion[0].teams, leagueVersion[0].schedule),
+        after: await this.simulateLeague(leagueVersion[1].teams, leagueVersion[1].schedule),
+      };
+      resolve(tradeResults);
+    });
+  }
 }
