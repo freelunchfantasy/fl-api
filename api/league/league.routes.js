@@ -16,9 +16,15 @@ export default () => {
     dbo
       .getUserLeagues(req.user.id)
       .then(result => {
+        setTimeout(() => {
+          const userLeagues = dataProcessingHelper.processUserLeagues(result);
+          res.json(userLeagues);
+          return next();
+        }, 1000);
+        /*
         const userLeagues = dataProcessingHelper.processUserLeagues(result);
         res.json(userLeagues);
-        return next();
+        return next();*/
       })
       .catch(err => {
         const errorMessage = `Something went wrong getting user leagues for user ${req.user.id}. Error: ${err}`;
@@ -60,7 +66,9 @@ export default () => {
     const { id } = req.body;
     logger.info(`Received request from user ${req.user.id} to get league ${id}`);
 
-    res.json({ ...mockLeagueData(), foundLeague: true });
+    setTimeout(() => {
+      res.json({ ...mockLeagueData(), foundLeague: true });
+    }, 1000);
     /* - UNCOMMENT THIS WHEN LEAGUE IS BACK IN THE FALL
     const ls = spawn('python', ['python/get_league.py', id]);
 
@@ -144,7 +152,7 @@ export default () => {
           outcomes: [],
           roster: [
             {
-              id: 1001,
+              id: 4040715,
               name: 'Jalen Hurts',
               position: 'QB',
               rank: 1,
@@ -155,7 +163,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1002,
+              id: 2576414,
               name: 'Raheem Mostert',
               position: 'RB',
               rank: 2,
@@ -166,7 +174,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1003,
+              id: 3042519,
               name: 'Aaron Jones',
               position: 'RB',
               rank: 24,
@@ -177,7 +185,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1004,
+              id: 4047646,
               name: 'AJ Brown',
               position: 'WR',
               rank: 3,
@@ -188,7 +196,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1005,
+              id: 4258173,
               name: 'Nico Collins',
               position: 'WR',
               rank: 14,
@@ -199,7 +207,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1007,
+              id: 4428331,
               name: 'Rashee Rice',
               position: 'WR',
               rank: 19,
@@ -210,7 +218,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1008,
+              id: 4572680,
               name: 'Tucker Kraft',
               position: 'TE',
               rank: 11,
@@ -221,7 +229,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1009,
+              id: 4362887,
               name: 'Justin Fields',
               position: 'QB',
               rank: 11,
@@ -243,7 +251,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1011,
+              id: 2971573,
               name: "Ka'imi Fairbairn",
               position: 'K',
               rank: 7,
@@ -254,7 +262,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 1012,
+              id: 4569618,
               name: 'Garrett Wilson',
               position: 'WR',
               rank: 23,
@@ -279,7 +287,7 @@ export default () => {
           outcomes: [],
           roster: [
             {
-              id: 2001,
+              id: 4361741,
               name: 'Brock Purdy',
               position: 'QB',
               rank: 5,
@@ -290,7 +298,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2002,
+              id: 4239996,
               name: 'Travis Etienne Jr.',
               position: 'RB',
               rank: 2,
@@ -301,7 +309,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2003,
+              id: 4427366,
               name: 'Breece Hall',
               position: 'RB',
               rank: 5,
@@ -312,7 +320,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2004,
+              id: 2977187,
               name: 'Cooper Kupp',
               position: 'WR',
               rank: 11,
@@ -323,7 +331,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2005,
+              id: 4360438,
               name: 'Brandon Aiyuk',
               position: 'WR',
               rank: 12,
@@ -334,7 +342,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2007,
+              id: 4429615,
               name: 'Zay Flowers',
               position: 'WR',
               rank: 27,
@@ -345,7 +353,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2008,
+              id: 15847,
               name: 'Travis Kelce',
               position: 'TE',
               rank: 1,
@@ -356,7 +364,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2009,
+              id: 3915511,
               name: 'Joe Burrow',
               position: 'QB',
               rank: 6,
@@ -378,7 +386,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2011,
+              id: 3953687,
               name: 'Brandon Aubrey',
               position: 'K',
               rank: 1,
@@ -389,7 +397,7 @@ export default () => {
               stats: {},
             },
             {
-              id: 2012,
+              id: 4040761,
               name: 'Devin Singletary',
               position: 'RB',
               rank: 23,
@@ -397,6 +405,17 @@ export default () => {
               projectedAveragePoints: 10.6,
               projectedTotalPoints: 215,
               percentStarted: 85,
+              stats: {},
+            },
+            {
+              id: 4569987,
+              name: 'Jaylen Warren',
+              position: 'RB',
+              rank: 25,
+              proTeam: 'PIT',
+              projectedAveragePoints: 9.3,
+              projectedTotalPoints: 188,
+              percentStarted: 81,
               stats: {},
             },
           ],
