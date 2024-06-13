@@ -13,6 +13,7 @@ export default class DataProcessingHelper {
 
   processUserLeagues(userLeagues) {
     return userLeagues.map(ul => ({
+      id: ul.id,
       userId: ul.user_id,
       leagueId: ul.external_league_id,
       leagueName: ul.league_name,

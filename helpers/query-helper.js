@@ -3,7 +3,8 @@ export default class QueryHelper {
 
   getUserLeaguesQuery() {
     return `SELECT
-                user_id
+                id
+              , user_id
               , external_league_id
               , league_name
               , user_team_id
@@ -83,5 +84,21 @@ export default class QueryHelper {
               last_activity = @lastActivity
             WHERE
               id = @id`;
+  }
+
+  getUserAndLeagueNamesQuery() {
+    return `SELECT
+                u.first_name
+              , u.last_name
+              , ul.league_name
+            FROM
+              [user] u
+            JOIN
+              [user_league] ul
+              ON ul.user_id = u.id
+            WHERE
+              ul.id = @userLeagueId
+            AND
+              ul.user_id = @userId`;
   }
 }

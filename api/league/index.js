@@ -20,5 +20,8 @@ export default bodyParser => {
   // POST request for simulating a trade
   api.post('/simulate-trade', bodyParser, leagueFunctions.simulateTrade);
 
+  // POST request for sending email with trade simulation results
+  api.post('/share-trade-simulation', bodyParser, leagueFunctions.shareTradeSimulationResults);
+
   return api;
 };

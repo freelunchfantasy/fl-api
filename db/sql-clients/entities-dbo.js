@@ -128,4 +128,20 @@ export default class EntitiesDbo {
       });
     });
   }
+
+  getUserAndLeagueNames(userId, userLeagueId) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.getUserAndLeagueNamesQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.input('userLeagueId', sql.Int, userLeagueId);
+        request.input('userId', sql.Int, userId);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset[0]);
+        });
+      });
+    });
+  }
 }
