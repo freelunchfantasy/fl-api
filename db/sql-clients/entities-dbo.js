@@ -129,6 +129,42 @@ export default class EntitiesDbo {
     });
   }
 
+  assignDemoLeague(userId) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.assignDemoLeagueQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        const randomUserTeamId = () => Math.random() * (12 - 1) + 1;
+        const userTeamId = randomUserTeamId();
+        var request = new sql.Request();
+        request.input('userId', sql.Int, userId);
+        request.input('userTeamId', sql.Int, userTeamId);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset);
+        });
+      });
+    });
+  }
+
+  insertTradeSimulation(userId, userLeagueId) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.insertTradeSimulationQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        const now = new Date();
+        var request = new sql.Request();
+        request.input('userId', sql.Int, userId);
+        request.input('userLeagueId', sql.Int, userLeagueId);
+        request.input('dateSimulated', sql.VarChar, now.toISOString());
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset);
+        });
+      });
+    });
+  }
+
   getUserAndLeagueNames(userId, userLeagueId) {
     return new Promise((resolve, reject) => {
       const query = this.queryHelper.getUserAndLeagueNamesQuery();
@@ -137,6 +173,25 @@ export default class EntitiesDbo {
         var request = new sql.Request();
         request.input('userLeagueId', sql.Int, userLeagueId);
         request.input('userId', sql.Int, userId);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset[0]);
+        });
+      });
+    });
+  }
+
+  insertTradeSimulationShare(userId, userLeagueId, targetEmail) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.insertTradeSimulationShareQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        const now = new Date();
+        var request = new sql.Request();
+        request.input('userId', sql.Int, userId);
+        request.input('userLeagueId', sql.Int, userLeagueId);
+        request.input('targetEmail', sql.VarChar, targetEmail);
+        request.input('dateShared', sql.VarChar, now.toISOString());
         request.query(query, (err, recordset) => {
           if (err) reject(err);
           resolve(recordset.recordset[0]);

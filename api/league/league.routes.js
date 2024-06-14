@@ -4,6 +4,7 @@ import EntitiesDbo from '../../db/sql-clients/entities-dbo.js';
 import DataProcessingHelper from '../../helpers/data-processing-helper.js';
 import SimulationHelper from '../../helpers/simulation-helper.js';
 import SendgridHelper from '../../helpers/sendgrid-helper.js';
+import DemoLeagueHelper from '../../helpers/demo-league-helper.js';
 
 export default () => {
   // Local instances
@@ -11,6 +12,7 @@ export default () => {
   const dataProcessingHelper = new DataProcessingHelper();
   const simulationHelper = new SimulationHelper();
   const sendgridHelper = new SendgridHelper();
+  const demoLeagueHelper = new DemoLeagueHelper();
 
   async function getUserLeagues(req, res, next) {
     logger.info(`Received request to get user leagues for user ${req.user.id}`);
@@ -67,9 +69,15 @@ export default () => {
   async function getLeague(req, res, next) {
     const { id } = req.body;
     logger.info(`Received request from user ${req.user.id} to get league ${id}`);
+    if (id == 1) {
+      // If the requested league is the demo league
+      res.json({ ...demoLeagueHelper.getDemoLeagueData() });
+      return next();
+    }
 
     setTimeout(() => {
       res.json({ ...mockLeagueData(), foundLeague: true });
+      next();
     }, 1000);
     /* - UNCOMMENT THIS WHEN LEAGUE IS BACK IN THE FALL
     const ls = spawn('python', ['python/get_league.py', id]);
@@ -119,10 +127,13 @@ export default () => {
       logger.error(`Received bad request to simulate a league trade`);
       return next();
     }
+    const userId = leagueVersions[0].userId;
+    const userLeagueId = leagueVersions[0].userLeagueId;
     logger.info(`Received request to simulate trade for league with id: ${leagueVersions[0].id}`);
     simulationHelper
       .simulateTrade(leagueVersions)
       .then(result => {
+        dbo.insertTradeSimulation(userId, userLeagueId);
         res.json(result);
         next();
       })
@@ -166,6 +177,8 @@ export default () => {
           right_win_diff_positive: right_win_diff >= 0,
         };
         sendgridHelper.sendTradeSimulationResultEmail(inputs);
+        logger.info(`Successfully sent trade simulation result email requested by user ${userId}. Saving record to DB`);
+        dbo.insertTradeSimulationShare(userId, userLeagueId, targetEmail);
         res.json({});
         next();
       })

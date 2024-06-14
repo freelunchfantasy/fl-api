@@ -1,3 +1,5 @@
+import constants from '../lib/constants.js';
+
 export default class QueryHelper {
   constructor() {}
 
@@ -100,5 +102,54 @@ export default class QueryHelper {
               ul.id = @userLeagueId
             AND
               ul.user_id = @userId`;
+  }
+
+  assignDemoLeagueQuery() {
+    return `INSERT INTO [user_league]
+              (
+                  user_id
+                , external_league_id
+                , league_name
+                , user_team_id
+              ) OUTPUT Inserted.id
+              VALUES
+              (
+                  @userId
+                , ${constants.DEMO_LEAGUE_EXTERNAL_ID}
+                , '${constants.DEMO_LEAGUE_NAME}'
+                , @userTeamId
+              )`;
+  }
+
+  insertTradeSimulationQuery() {
+    return `INSERT INTO [trade_simulation]
+                (
+                    user_id
+                  , user_league_id
+                  , date_simulated
+                ) OUTPUT Inserted.id
+                VALUES
+                (
+                    @userId
+                  , @userLeagueId
+                  , @dateSimulated
+                )`;
+  }
+
+  insertTradeSimulationShareQuery() {
+    return `INSERT INTO [trade_simulation_share]
+                (
+                    user_id
+                  , user_league_id
+                  , date_shared
+                  , target_email
+                ) OUTPUT Inserted.id
+                VALUES
+                (
+                    @userId
+                  , @userLeagueId
+                  , @dateShared
+                  , @targetEmail
+                )`;
   }
 }

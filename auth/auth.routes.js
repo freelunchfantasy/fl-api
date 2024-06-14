@@ -67,6 +67,7 @@ export async function register(req, res, next) {
     .insertUser(e, p, firstName, lastName)
     .then(result => {
       logger.info(`Successfully registered user ${result.id}`);
+      dbo.assignDemoLeague(result.id); // Assign the demo league to the new user
       const sessionToken = encodeSessionJwt({ id: result.id, email: e, firstName, lastName });
       res.json({
         id: result.id,
