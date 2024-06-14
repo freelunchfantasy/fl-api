@@ -14,6 +14,9 @@ export default bodyParser => {
   // POST request for retrieving user's league
   api.post('/get-league', bodyParser, leagueFunctions.getLeague);
 
+  // GET request for retrieving NFL teams and their bye weeks
+  api.get('/nfl-teams', bodyParser, leagueFunctions.getNflTeams);
+
   // POST request for simulating a league's ROS games
   api.post('/simulate', bodyParser, leagueFunctions.simulateLeague);
 

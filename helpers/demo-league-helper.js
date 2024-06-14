@@ -6,17 +6,17 @@ export default class DemoLeagueHelper {
   }
 
   demoLeagueData = {
-    leagueId: 49454731,
+    leagueId: 1,
     settings: {
-      name: 'the boyoys',
-      regSeasonGames: 13,
+      name: 'Free Lunch Demo League',
+      regSeasonGames: 14,
       scoringType: 'replace',
       scoringFormat: [],
     },
     teams: [
       {
         id: 1,
-        teamName: 'Buttery Crispy Flake',
+        teamName: 'Gridiron Gladiators',
         wins: 6,
         losses: 1,
         ties: 0,
@@ -195,7 +195,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 2,
-        teamName: 'You Had All Summer',
+        teamName: 'Pigskin Predators',
         wins: 4,
         losses: 3,
         ties: 0,
@@ -363,7 +363,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 3,
-        teamName: 'Mass is Gas',
+        teamName: 'Touchdown Titans',
         wins: 1,
         losses: 6,
         ties: 0,
@@ -531,7 +531,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 4,
-        teamName: 'Lights Camera Jackson',
+        teamName: 'End Zone Enforcers',
         wins: 3,
         losses: 4,
         ties: 0,
@@ -699,7 +699,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 5,
-        teamName: 'Oy, Bruv. Hotline Blingin',
+        teamName: 'Fantasy Flyers',
         wins: 4,
         losses: 3,
         ties: 0,
@@ -867,7 +867,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 6,
-        teamName: 'Herb Your Enthusiasm',
+        teamName: 'Red Zone Renegades',
         wins: 3,
         losses: 4,
         ties: 0,
@@ -1046,7 +1046,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 7,
-        teamName: "Jess's Jabronis",
+        teamName: 'Hail Mary Heroes',
         wins: 7,
         losses: 0,
         ties: 0,
@@ -1214,7 +1214,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 8,
-        teamName: 'Pulled McCaffrey',
+        teamName: 'Blitzing Beasts',
         wins: 2,
         losses: 5,
         ties: 0,
@@ -1382,7 +1382,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 9,
-        teamName: 'Johnson n Johnson',
+        teamName: 'Goal Line Giants',
         wins: 5,
         losses: 2,
         ties: 0,
@@ -1550,7 +1550,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 10,
-        teamName: 'Young Money Tillionaire',
+        teamName: 'Snap Count Spartans',
         wins: 3,
         losses: 4,
         ties: 0,
@@ -1718,7 +1718,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 11,
-        teamName: 'Hot Toddy',
+        teamName: 'Two-Minute Warriors',
         wins: 0,
         losses: 7,
         ties: 0,
@@ -1886,7 +1886,7 @@ export default class DemoLeagueHelper {
       },
       {
         id: 12,
-        teamName: 'Impractical Njokus',
+        teamName: 'First Down Phantoms',
         wins: 4,
         losses: 3,
         ties: 0,

@@ -33,6 +33,17 @@ export default class QueryHelper {
               )`;
   }
 
+  getNflTeamsQuery() {
+    return `SELECT
+                id
+              , city
+              , team
+              , abbreviation
+              , bye_week
+            FROM
+              [nfl_team]`;
+  }
+
   insertUserQuery() {
     return `INSERT INTO [user]
                 (

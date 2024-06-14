@@ -20,4 +20,14 @@ export default class DataProcessingHelper {
       userTeamId: ul.user_team_id,
     }));
   }
+
+  processNflTeams(teams) {
+    return teams.map(team => ({
+      id: team.id,
+      city: team.city,
+      team: team.team,
+      abbreviation: team.abbreviation,
+      byeWeek: team.bye_week,
+    }));
+  }
 }
