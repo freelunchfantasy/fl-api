@@ -52,6 +52,20 @@ export default class EntitiesDbo {
     });
   }
 
+  getNflTeams() {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.getNflTeamsQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset);
+        });
+      });
+    });
+  }
+
   insertUser(email, password, firstName, lastName) {
     return new Promise((resolve, reject) => {
       const query = this.queryHelper.insertUserQuery();
