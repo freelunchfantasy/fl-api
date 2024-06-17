@@ -79,6 +79,15 @@ export default class QueryHelper {
               u.password = @password`;
   }
 
+  getUserPasswordByEmailQuery() {
+    return `SELECT
+                password
+            FROM
+              [user] u
+            WHERE
+              u.email = @email`;
+  }
+
   getUserByIdQuery() {
     return `SELECT
                 id

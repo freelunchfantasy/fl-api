@@ -12,6 +12,7 @@ export default class DemoLeagueHelper {
       regSeasonGames: 14,
       scoringType: 'replace',
       scoringFormat: [],
+      lineup: ['QB', 'RB', 'RB', 'WR', 'WR', 'TE', 'FLEX', 'D/ST', 'K'],
     },
     teams: [
       {

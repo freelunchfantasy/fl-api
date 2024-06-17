@@ -20,15 +20,9 @@ export default () => {
     dbo
       .getUserLeagues(req.user.id)
       .then(result => {
-        setTimeout(() => {
-          const userLeagues = dataProcessingHelper.processUserLeagues(result);
-          res.json(userLeagues);
-          return next();
-        }, 1000);
-        /*
         const userLeagues = dataProcessingHelper.processUserLeagues(result);
         res.json(userLeagues);
-        return next();*/
+        return next();
       })
       .catch(err => {
         const errorMessage = `Something went wrong getting user leagues for user ${req.user.id}. Error: ${err}`;
@@ -74,12 +68,6 @@ export default () => {
       res.json({ ...demoLeagueHelper.getDemoLeagueData() });
       return next();
     }
-
-    setTimeout(() => {
-      res.json({ ...demoLeagueHelper.getDemoLeagueData(), foundLeague: true });
-      next();
-    }, 1000);
-    /* - UNCOMMENT THIS WHEN LEAGUE IS BACK IN THE FALL
     const ls = spawn('python', ['python/get_league.py', id]);
 
     new Promise((resolve, reject) => {
@@ -97,7 +85,6 @@ export default () => {
         res.json({ foundLeague: false });
         next();
       });
-      */
   }
 
   async function getNflTeams(req, res, next) {
