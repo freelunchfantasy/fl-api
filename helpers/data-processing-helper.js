@@ -7,7 +7,6 @@ export default class DataProcessingHelper {
       firstName: user.first_name,
       lastName: user.last_name,
       email: user.email,
-      leagues: user.leagues,
     };
   }
 
