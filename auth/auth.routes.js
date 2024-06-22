@@ -4,16 +4,20 @@ import bcrypt from 'bcrypt';
 import { configDotenv } from 'dotenv';
 import EntitiesDbo from '../db/sql-clients/entities-dbo.js';
 import DataProcessingHelper from '../helpers/data-processing-helper.js';
+import DemoLeagueHelper from '../helpers/demo-league-helper.js';
+import LeagueDataHelper from '../helpers/league-data-helper.js';
 
 // Local instances
 const dbo = new EntitiesDbo();
 const dataProcessingHelper = new DataProcessingHelper();
+const demoLeagueHelper = new DemoLeagueHelper();
+const leagueDataHelper = new LeagueDataHelper();
 configDotenv();
 const key = process.env.JWT_PUBLIC_KEY;
 const saltRounds = 10;
 
 /**
- * Method for getting ESPN league by ID
+ * Method for logging a user in
  * @param {*} req
  * @param {*} res
  * @param {*} next
@@ -74,38 +78,52 @@ export async function login(req, res, next) {
 
 export async function register(req, res, next) {
   const { e, p, firstName, lastName } = req.body;
-
   logger.info(`Received register request with email ${e}, firstName ${firstName}, lastName ${lastName}`);
-  bcrypt.hash(p, saltRounds, (err, hash) => {
-    if (err) {
-      logger.error(`Something went wrong hashing user password`);
+
+  dbo.getUserByEmail(e).then(result => {
+    if (result) {
+      logger.info(`Cannot register new user, email already exists`);
+      res.json({ error: 'Email address already registered' });
       return next();
     }
-    dbo
-      .insertUser(e, hash, firstName, lastName)
-      .then(result => {
-        logger.info(`Successfully registered user ${result.id}`);
-        dbo.assignDemoLeague(result.id); // Assign the demo league to the new user
-        const sessionToken = encodeSessionJwt({ id: result.id, email: e, firstName, lastName });
-        res.json({
-          user: {
-            id: result.id,
-            firstName,
-            lastName,
-            e,
-            sessionToken,
-          },
-          success: true,
+    bcrypt.hash(p, saltRounds, (err, hash) => {
+      if (err) {
+        logger.error(`Something went wrong hashing user password`);
+        return next();
+      }
+      dbo
+        .insertUser(e, hash, firstName, lastName)
+        .then(result => {
+          logger.info(`Successfully registered user ${result.id}`);
+          const demoLeagueData = demoLeagueHelper.getDemoLeagueData();
+          const totalTeams = demoLeagueData.teams.length;
+          const randomUserTeamId = () => Math.floor(Math.random() * totalTeams + 1);
+          const userTeamId = randomUserTeamId();
+          const userTeamName = demoLeagueData.teams.find(t => t.id == userTeamId).teamName;
+          const userTeamRank = leagueDataHelper.determineTeamRank(demoLeagueData.teams, userTeamId);
+          dbo.assignDemoLeague(result.id, userTeamId, userTeamName, userTeamRank, totalTeams).then(() => {
+            const sessionToken = encodeSessionJwt({ id: result.id, email: e, firstName, lastName });
+            res.json({
+              user: {
+                id: result.id,
+                firstName,
+                lastName,
+                e,
+                sessionToken,
+              },
+              success: true,
+            });
+            return next();
+          });
+        })
+        .catch(err => {
+          const errorMessage = `Something went wrong registering new user. Error: ${err}`;
+          logger.info(errorMessage);
+          res.sendStatus(500);
+          res.json({ message: errorMessage });
+          return next();
         });
-        return next();
-      })
-      .catch(err => {
-        const errorMessage = `Something went wrong registering new user. Error: ${err}`;
-        logger.info(errorMessage);
-        res.sendStatus(500);
-        res.json({ message: errorMessage });
-        return next();
-      });
+    });
   });
 }
 

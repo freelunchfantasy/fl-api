@@ -5,15 +5,35 @@ export default class QueryHelper {
 
   getUserLeaguesQuery() {
     return `SELECT
-                id
-              , user_id
-              , external_league_id
-              , league_name
-              , user_team_id
+                ul.id
+              , ul.user_id
+              , ul.external_league_id
+              , ul.league_name
+              , ul.user_team_id
+              , ul.user_team_name
+              , ul.user_team_rank
+              , ul.total_teams
+              , ls.name AS "league_source_name"
+            FROM
+              [user_league] ul
+            JOIN
+              [league_source] ls on ls.id = ul.league_source_id
+            WHERE
+              ul.user_id = @userId
+            ORDER BY ul.id ASC`;
+  }
+
+  getCheckUserLeagueQuery() {
+    return `SELECT
+              id
             FROM
               [user_league]
             WHERE
-              user_id = @userId`;
+              user_id = @userId
+            AND
+              external_league_id = @externalLeagueId
+            AND
+              league_source_id = @leagueSourceId`;
   }
 
   insertNewUserLeagueQuery() {
@@ -23,6 +43,10 @@ export default class QueryHelper {
                 , external_league_id
                 , league_name
                 , user_team_id
+                , user_team_name
+                , user_team_rank
+                , total_teams
+                , league_source_id
               ) OUTPUT Inserted.id
               VALUES
               (
@@ -30,7 +54,17 @@ export default class QueryHelper {
                 , @externalLeagueId
                 , @leagueName
                 , @userTeamId
+                , @userTeamName
+                , @userTeamRank
+                , @totalTeams
+                , @leagueSourceId
               )`;
+  }
+
+  deleteUserLeagueQuery() {
+    return `DELETE FROM [user_league]
+            WHERE
+              id = @userLeagueId`;
   }
 
   getNflTeamsQuery() {
@@ -42,6 +76,14 @@ export default class QueryHelper {
               , bye_week
             FROM
               [nfl_team]`;
+  }
+
+  getLeagueSourcesQuery() {
+    return `SELECT
+                id
+              , name
+            FROM
+              [league_source]`;
   }
 
   insertUserQuery() {
@@ -63,6 +105,15 @@ export default class QueryHelper {
                   , @dateJoined
                   , @lastActivity
                 )`;
+  }
+
+  getUserByEmailQuery() {
+    return `SELECT
+                id
+            FROM
+              [user] u
+            WHERE
+              u.email = @email`;
   }
 
   getUserByEmailAndPasswordQuery() {
@@ -131,6 +182,10 @@ export default class QueryHelper {
                 , external_league_id
                 , league_name
                 , user_team_id
+                , league_source_id
+                , user_team_name
+                , user_team_rank
+                , total_teams
               ) OUTPUT Inserted.id
               VALUES
               (
@@ -138,6 +193,10 @@ export default class QueryHelper {
                 , ${constants.DEMO_LEAGUE_EXTERNAL_ID}
                 , '${constants.DEMO_LEAGUE_NAME}'
                 , @userTeamId
+                , ${constants.DEMO_LEAGUE_LEAGUE_SOURCE_ID}
+                , @userTeamName
+                , @userTeamRank
+                , @totalTeams
               )`;
   }
 
@@ -171,5 +230,19 @@ export default class QueryHelper {
                   , @dateShared
                   , @targetEmail
                 )`;
+  }
+
+  syncUserLeagueDataQuery() {
+    return `UPDATE [user_league]
+            SET
+                user_team_name = @userTeamName
+              , user_team_rank = @userTeamRank
+              , total_teams = @totalTeams
+            WHERE
+              user_id = @userId
+            AND
+              external_league_id = @externalLeagueId
+            AND
+              league_source_id = @leagueSourceId`;
   }
 }
