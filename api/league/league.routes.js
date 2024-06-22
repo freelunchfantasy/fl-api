@@ -5,6 +5,7 @@ import DataProcessingHelper from '../../helpers/data-processing-helper.js';
 import SimulationHelper from '../../helpers/simulation-helper.js';
 import SendgridHelper from '../../helpers/sendgrid-helper.js';
 import DemoLeagueHelper from '../../helpers/demo-league-helper.js';
+import LeagueDataHelper from '../../helpers/league-data-helper.js';
 
 export default () => {
   // Local instances
@@ -13,6 +14,7 @@ export default () => {
   const simulationHelper = new SimulationHelper();
   const sendgridHelper = new SendgridHelper();
   const demoLeagueHelper = new DemoLeagueHelper();
+  const leagueDataHelper = new LeagueDataHelper();
 
   async function getUserLeagues(req, res, next) {
     logger.info(`Received request to get user leagues for user ${req.user.id}`);
@@ -33,22 +35,92 @@ export default () => {
       });
   }
 
-  async function saveNewUserLeague(req, res, next) {
+  async function checkUserLeague(req, res, next) {
     const userId = req.user.id;
-    const { externalLeagueId, leagueName, userTeamId } = req.body;
-    logger.info(`Received request to save new user league for user ${userId} and external league ${externalLeagueId}`);
+    const { externalLeagueId, leagueSourceId } = req.body;
+    logger.info(
+      `Received request to check user league for user ${userId} with external league ${externalLeagueId} and league source ${leagueSourceId}`
+    );
 
     dbo
-      .saveNewUserLeague(userId, externalLeagueId, leagueName, userTeamId)
+      .checkUserLeague(userId, externalLeagueId, leagueSourceId)
+      .then(result => {
+        if (result.length) {
+          res.json({
+            foundExistingUserLeague: true,
+          });
+          next();
+        } else {
+          res.json({
+            foundExistingUserLeague: false,
+          });
+          next();
+        }
+      })
+      .catch(err => {
+        logger.error(
+          `Something went wrong checking user league for user ${userId} with external league ${externalLeagueId} and league source ${leagueSourceId}. Error: ${err}`
+        );
+        res.json({ error: err });
+        next();
+      });
+  }
+
+  async function saveNewUserLeague(req, res, next) {
+    const userId = req.user.id;
+    let { externalLeagueId, leagueName, userTeamId, userTeamName, userTeamRank, totalTeams, leagueSourceId } = req.body;
+    logger.info(`Received request to save new user league for user ${userId} and external league ${externalLeagueId}`);
+    if (!userTeamName) {
+      // occurs when adding demo league
+      const demoLeagueData = demoLeagueHelper.getDemoLeagueData();
+      userTeamName = demoLeagueData.teams.find(t => t.id == userTeamId).teamName;
+      userTeamRank = leagueDataHelper.determineTeamRank(demoLeagueData.teams, userTeamId);
+    }
+
+    dbo
+      .saveNewUserLeague(
+        userId,
+        externalLeagueId,
+        leagueName,
+        userTeamId,
+        userTeamName,
+        userTeamRank,
+        totalTeams,
+        leagueSourceId
+      )
       .then(result => {
         res.json(result.id);
         return next();
       })
       .catch(err => {
         const errorMessage = `Something went wrong saving new user league for user ${req.user.id} and external league ${externalLeagueId}. Error: ${err}`;
-        logger.info(errorMessage);
+        logger.error(errorMessage);
         res.sendStatus(500);
         res.json({ message: errorMessage });
+        return next();
+      });
+  }
+
+  async function deleteUserLeague(req, res, next) {
+    const { userLeagueId } = req.body;
+    if (!userLeagueId) {
+      logger.error(`Invalid request to delete user league.  Mising userLeagueId`);
+      res.json({});
+      return next();
+    }
+    logger.info(`Received request to delete user league ${userLeagueId}`);
+
+    dbo
+      .deleteUserLeague(userLeagueId)
+      .then(result => {
+        res.json({ success: true });
+        return next();
+      })
+      .catch(err => {
+        const errorMessage = `Something went wrong deleting user league with id ${userLeagueId}. Error: ${err}`;
+        logger.error(errorMessage);
+        res.sendStatus(500);
+        res.json({ message: errorMessage, success: false });
         return next();
       });
   }
@@ -61,14 +133,16 @@ export default () => {
    * @returns
    */
   async function getLeague(req, res, next) {
-    const { id } = req.body;
-    logger.info(`Received request from user ${req.user.id} to get league ${id}`);
-    if (id == 1) {
+    const { leagueId, userTeamId } = req.body;
+    logger.info(`Received request from user ${req.user.id} to get league ${leagueId}`);
+    if (leagueId == 1) {
       // If the requested league is the demo league
-      res.json({ ...demoLeagueHelper.getDemoLeagueData() });
+      const leagueData = demoLeagueHelper.getDemoLeagueData();
+      syncUserLeague(leagueData, req.user.id, userTeamId, leagueId, 1); // 1 is for Demo
+      res.json({ ...leagueData, foundLeague: true });
       return next();
     }
-    const ls = spawn('python', ['python/get_league.py', id]);
+    const ls = spawn('python', ['python/get_league.py', leagueId]);
 
     new Promise((resolve, reject) => {
       // Listen to the `data` event on `stdout`.
@@ -77,11 +151,14 @@ export default () => {
       ls.stderr.on('data', data => reject(`stderr: ${data}`));
     })
       .then(data => {
-        res.json({ ...JSON.parse(data.slice(data.indexOf('{'))), foundLeague: true });
+        logger.info(`Successfully retrieved data for league ${leagueId}`);
+        const leagueData = JSON.parse(data.slice(data.indexOf('{')));
+        if (userTeamId) syncUserLeague(leagueData, req.user.id, userTeamId, leagueId, 2); // 2 is for ESPN, update later
+        res.json({ ...leagueData, foundLeague: true });
         next();
       })
       .catch(err => {
-        logger.info(`Something went wrong loading league with external id ${id}. Err: ${err}`);
+        logger.info(`Something went wrong loading league with external id ${leagueId}. Err: ${err}`);
         res.json({ foundLeague: false });
         next();
       });
@@ -97,6 +174,21 @@ export default () => {
       })
       .catch(err => {
         logger.error(`Something went wrong getting NFL teams. Err: ${err}`);
+        res.json([]);
+        next();
+      });
+  }
+
+  async function getLeagueSources(req, res, next) {
+    logger.info(`Received request to get available league sources from user ${req.user.id}`);
+    dbo
+      .getLeagueSources()
+      .then(result => {
+        res.json(dataProcessingHelper.processLeagueSources(result));
+        next();
+      })
+      .catch(err => {
+        logger.error(`Something went wrong getting league sources. Err: ${err}`);
         res.json([]);
         next();
       });
@@ -191,12 +283,32 @@ export default () => {
       });
   }
 
+  function syncUserLeague(leagueData, userId, userTeamId, externalLeagueId, leagueSourceId) {
+    const userTeamName = leagueData.teams.find(team => team.id == userTeamId).teamName;
+    logger.info(userTeamName);
+    const totalTeams = leagueData.teams.length;
+    const userTeamRank = leagueDataHelper.determineTeamRank(leagueData.teams, userTeamId);
+    dbo
+      .syncUserLeagueData(userId, externalLeagueId, leagueSourceId, userTeamName, userTeamRank, totalTeams)
+      .then(result => {
+        logger.info(`Successfully synced user league for user ${userId}, external league ${externalLeagueId}`);
+      })
+      .catch(err => {
+        logger.error(
+          `Something went wrong syncing user league for ${userId}, external league ${externalLeagueId}. Error ${err}`
+        );
+      });
+  }
+
   return {
     getLeague,
     getNflTeams,
+    getLeagueSources,
     simulateLeague,
     getUserLeagues,
+    checkUserLeague,
     saveNewUserLeague,
+    deleteUserLeague,
     simulateTrade,
     shareTradeSimulationResults,
   };

@@ -34,7 +34,33 @@ export default class EntitiesDbo {
     });
   }
 
-  saveNewUserLeague(userId, externalLeagueId, leagueName, userTeamId) {
+  checkUserLeague(userId, externalLeagueId, leagueSourceId) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.getCheckUserLeagueQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.input('userId', sql.Int, userId);
+        request.input('externalLeagueId', sql.Int, externalLeagueId);
+        request.input('leagueSourceId', sql.Int, leagueSourceId);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset);
+        });
+      });
+    });
+  }
+
+  saveNewUserLeague(
+    userId,
+    externalLeagueId,
+    leagueName,
+    userTeamId,
+    userTeamName,
+    userTeamRank,
+    totalTeams,
+    leagueSourceId
+  ) {
     return new Promise((resolve, reject) => {
       const query = this.queryHelper.insertNewUserLeagueQuery();
       sql.connect(this.config, err => {
@@ -44,6 +70,10 @@ export default class EntitiesDbo {
         request.input('externalLeagueId', sql.Int, externalLeagueId);
         request.input('leagueName', sql.VarChar, leagueName);
         request.input('userTeamId', sql.Int, userTeamId);
+        request.input('userTeamName', sql.VarChar, userTeamName);
+        request.input('userTeamRank', sql.Int, userTeamRank);
+        request.input('totalTeams', sql.Int, totalTeams);
+        request.input('leagueSourceId', sql.Int, leagueSourceId);
         request.query(query, (err, recordset) => {
           if (err) reject(err);
           resolve(recordset.recordset[0]);
@@ -52,9 +82,38 @@ export default class EntitiesDbo {
     });
   }
 
+  deleteUserLeague(userLeagueId) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.deleteUserLeagueQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.input('userLeagueId', sql.Int, userLeagueId);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset);
+        });
+      });
+    });
+  }
+
   getNflTeams() {
     return new Promise((resolve, reject) => {
       const query = this.queryHelper.getNflTeamsQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset);
+        });
+      });
+    });
+  }
+
+  getLeagueSources() {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.getLeagueSourcesQuery();
       sql.connect(this.config, err => {
         if (err) reject(err);
         var request = new sql.Request();
@@ -81,6 +140,24 @@ export default class EntitiesDbo {
         request.input('lastActivity', sql.VarChar, now);
         request.query(query, (err, recordset) => {
           if (err) reject(err);
+          resolve(recordset.recordset[0]);
+        });
+      });
+    });
+  }
+
+  getUserByEmail(email) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.getUserByEmailQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.input('email', sql.VarChar, email);
+        request.query(query, (err, recordset) => {
+          if (err) {
+            logger.info(`Unexpected error while checking if user already exists: ${err}`);
+            reject(new Error('Server error occurred during register'));
+          }
           resolve(recordset.recordset[0]);
         });
       });
@@ -162,16 +239,17 @@ export default class EntitiesDbo {
     });
   }
 
-  assignDemoLeague(userId) {
+  assignDemoLeague(userId, userTeamId, userTeamName, userTeamRank, totalTeams) {
     return new Promise((resolve, reject) => {
       const query = this.queryHelper.assignDemoLeagueQuery();
       sql.connect(this.config, err => {
         if (err) reject(err);
-        const randomUserTeamId = () => Math.random() * (12 - 1) + 1;
-        const userTeamId = randomUserTeamId();
         var request = new sql.Request();
         request.input('userId', sql.Int, userId);
         request.input('userTeamId', sql.Int, userTeamId);
+        request.input('userTeamName', sql.VarChar, userTeamName);
+        request.input('userTeamRank', sql.Int, userTeamRank);
+        request.input('totalTeams', sql.Int, totalTeams);
         request.query(query, (err, recordset) => {
           if (err) reject(err);
           resolve(recordset);
@@ -228,6 +306,26 @@ export default class EntitiesDbo {
         request.query(query, (err, recordset) => {
           if (err) reject(err);
           resolve(recordset.recordset[0]);
+        });
+      });
+    });
+  }
+
+  syncUserLeagueData(userId, externalLeagueId, leagueSourceId, userTeamName, userTeamRank, totalTeams) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.syncUserLeagueDataQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.input('userId', sql.Int, userId);
+        request.input('externalLeagueId', sql.Int, externalLeagueId);
+        request.input('leagueSourceId', sql.Int, leagueSourceId);
+        request.input('userTeamName', sql.VarChar, userTeamName);
+        request.input('userTeamRank', sql.Int, userTeamRank);
+        request.input('totalTeams', sql.Int, totalTeams);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset);
         });
       });
     });

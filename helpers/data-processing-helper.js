@@ -17,6 +17,10 @@ export default class DataProcessingHelper {
       leagueId: ul.external_league_id,
       leagueName: ul.league_name,
       userTeamId: ul.user_team_id,
+      userTeamName: ul.user_team_name,
+      userTeamRank: ul.user_team_rank,
+      totalTeams: ul.total_teams,
+      leagueSource: ul.league_source_name,
     }));
   }
 
@@ -28,5 +32,14 @@ export default class DataProcessingHelper {
       abbreviation: team.abbreviation,
       byeWeek: team.bye_week,
     }));
+  }
+
+  processLeagueSources(leagueSources) {
+    return leagueSources
+      .filter(source => source.name != 'Demo')
+      .map(source => ({
+        id: source.id,
+        name: source.name,
+      }));
   }
 }
