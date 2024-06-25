@@ -13,24 +13,24 @@ steps:
     versionSpec: '18.16.1'
   displayName: 'Install Node.js'
 
-- task: CopyFiles@2
+- script: |
+    npm install
+  displayName: 'npm install'
+  
+- task: ArchiveFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Copy files'
+      rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+      includeRootFolder: false
+      archiveType: zip
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$Build.BuildId).zip'
+      replaceExistingArchive: true
+  displayName: 'Archive Files'
   
 - task: PublishBuildArtifacts@1
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'freelunch-api' 
   displayName: 'Publish npm artifact'
-  
-- task: ArchiveFiles@2
-  inputs:
-      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-      includeRootFolder: false
-  displayName: 'Zip Artifact'
 
 - script:
     ls $(Build.ArtifactStagingDirectory)
