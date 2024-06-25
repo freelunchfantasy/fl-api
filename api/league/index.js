@@ -17,6 +17,9 @@ export default bodyParser => {
   // POST request for deleting a user league
   api.post('/delete-user-league', bodyParser, leagueFunctions.deleteUserLeague);
 
+  // POST request for updating a user league
+  api.post('/update-user-league', bodyParser, leagueFunctions.updateUserLeague);
+
   // POST request for retrieving user's league
   api.post('/get-league', bodyParser, leagueFunctions.getLeague);
 

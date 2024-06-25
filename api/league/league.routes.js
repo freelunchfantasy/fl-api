@@ -104,11 +104,11 @@ export default () => {
   async function deleteUserLeague(req, res, next) {
     const { userLeagueId } = req.body;
     if (!userLeagueId) {
-      logger.error(`Invalid request to delete user league.  Mising userLeagueId`);
+      logger.error(`Invalid request to delete user league.  Missing userLeagueId`);
       res.json({});
       return next();
     }
-    logger.info(`Received request to delete user league ${userLeagueId}`);
+    logger.info(`Received request from user ${req.user.id} to delete user league ${userLeagueId}`);
 
     dbo
       .deleteUserLeague(userLeagueId)
@@ -121,6 +121,25 @@ export default () => {
         logger.error(errorMessage);
         res.sendStatus(500);
         res.json({ message: errorMessage, success: false });
+        return next();
+      });
+  }
+
+  async function updateUserLeague(req, res, next) {
+    const { userLeagueId, leagueName, userTeamId, userTeamName, userTeamRank } = req.body;
+    logger.info(`Received request from user ${req.user.id} to update user league ${userLeagueId}`);
+
+    dbo
+      .updateUserLeague(userLeagueId, leagueName, userTeamId, userTeamName, userTeamRank)
+      .then(result => {
+        res.json({});
+        return next();
+      })
+      .catch(err => {
+        const errorMessage = `Something went wrong updating user league ${userLeagueId}. Error: ${err}`;
+        logger.error(errorMessage);
+        res.sendStatus(500);
+        res.json({ message: errorMessage });
         return next();
       });
   }
@@ -222,12 +241,11 @@ export default () => {
       return next();
     }
     const userId = leagueVersions[0].userId;
-    const userLeagueId = leagueVersions[0].userLeagueId;
     logger.info(`Received request to simulate trade for league with id: ${leagueVersions[0].id}`);
     simulationHelper
       .simulateTrade(leagueVersions)
       .then(result => {
-        dbo.insertTradeSimulation(userId, userLeagueId);
+        dbo.insertTradeSimulation(userId);
         res.json(result);
         next();
       })
@@ -309,6 +327,7 @@ export default () => {
     checkUserLeague,
     saveNewUserLeague,
     deleteUserLeague,
+    updateUserLeague,
     simulateTrade,
     shareTradeSimulationResults,
   };

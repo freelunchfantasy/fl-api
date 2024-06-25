@@ -67,6 +67,17 @@ export default class QueryHelper {
               id = @userLeagueId`;
   }
 
+  updateUserLeagueQuery() {
+    return `UPDATE [user_league]
+            SET
+                league_name = @leagueName
+              , user_team_id = @userTeamId
+              , user_team_name = @userTeamName
+              , user_team_rank = @userTeamRank
+            WHERE
+              id = @userLeagueId`;
+  }
+
   getNflTeamsQuery() {
     return `SELECT
                 id
@@ -204,13 +215,11 @@ export default class QueryHelper {
     return `INSERT INTO [trade_simulation]
                 (
                     user_id
-                  , user_league_id
                   , date_simulated
                 ) OUTPUT Inserted.id
                 VALUES
                 (
                     @userId
-                  , @userLeagueId
                   , @dateSimulated
                 )`;
   }

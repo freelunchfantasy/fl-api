@@ -6,12 +6,14 @@ import EntitiesDbo from '../db/sql-clients/entities-dbo.js';
 import DataProcessingHelper from '../helpers/data-processing-helper.js';
 import DemoLeagueHelper from '../helpers/demo-league-helper.js';
 import LeagueDataHelper from '../helpers/league-data-helper.js';
+import SendgridHelper from '../helpers/sendgrid-helper.js';
 
 // Local instances
 const dbo = new EntitiesDbo();
 const dataProcessingHelper = new DataProcessingHelper();
 const demoLeagueHelper = new DemoLeagueHelper();
 const leagueDataHelper = new LeagueDataHelper();
+const sendgridHelper = new SendgridHelper();
 configDotenv();
 const key = process.env.JWT_PUBLIC_KEY;
 const saltRounds = 10;
@@ -128,8 +130,23 @@ export async function register(req, res, next) {
 }
 
 export async function sendContactEmail(req, res, next) {
-  res.json({ message: 'nice o' });
-  next();
+  try {
+    const now = new Date();
+    const inputs = {
+      sender_email: req.body.e,
+      sender_name: `${req.body.firstName} ${req.body.lastName}`,
+      message: req.body.message,
+      date_submitted: `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`,
+    };
+    sendgridHelper.sendFeedbackMessageEmail(inputs);
+    logger.info(`Successfully sent feedback message email from ${req.body.e}`);
+    res.json({});
+    next();
+  } catch (err) {
+    logger.error(`Something went wrong sending feedback message email. Err: ${err}`);
+    res.json({ err });
+    return next();
+  }
 }
 
 function encodeSessionJwt(user) {
