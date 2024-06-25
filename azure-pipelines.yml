@@ -29,3 +29,13 @@ steps:
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'freelunch-api' 
+    
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'FreeLunchFantasySubscription(e2d91e5f-7659-43aa-bffc-22aed71fcb48)'
+    appType: 'webAppLinux'
+    WebAppName: 'freelunch-api'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'NODE|18-lts'
+    StartupCommand: 'pm2 start ecosystem.config.cjs'
