@@ -30,6 +30,10 @@ steps:
     ls $(Build.ArtifactStagingDirectory)
   displayName: 'testing'
 
+- script:
+    ls $(Build.ArtifactStagingDirectory)/..
+  displayName: 'testing again'
+
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
