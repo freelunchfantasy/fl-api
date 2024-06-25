@@ -97,6 +97,25 @@ export default class EntitiesDbo {
     });
   }
 
+  updateUserLeague(userLeagueId, leagueName, userTeamId, userTeamName, userTeamRank) {
+    return new Promise((resolve, reject) => {
+      const query = this.queryHelper.updateUserLeagueQuery();
+      sql.connect(this.config, err => {
+        if (err) reject(err);
+        var request = new sql.Request();
+        request.input('userLeagueId', sql.Int, userLeagueId);
+        request.input('leagueName', sql.VarChar, leagueName);
+        request.input('userTeamId', sql.Int, userTeamId);
+        request.input('userTeamName', sql.VarChar, userTeamName);
+        request.input('userTeamRank', sql.Int, userTeamRank);
+        request.query(query, (err, recordset) => {
+          if (err) reject(err);
+          resolve(recordset.recordset);
+        });
+      });
+    });
+  }
+
   getNflTeams() {
     return new Promise((resolve, reject) => {
       const query = this.queryHelper.getNflTeamsQuery();
@@ -258,7 +277,7 @@ export default class EntitiesDbo {
     });
   }
 
-  insertTradeSimulation(userId, userLeagueId) {
+  insertTradeSimulation(userId) {
     return new Promise((resolve, reject) => {
       const query = this.queryHelper.insertTradeSimulationQuery();
       sql.connect(this.config, err => {
@@ -266,7 +285,6 @@ export default class EntitiesDbo {
         const now = new Date();
         var request = new sql.Request();
         request.input('userId', sql.Int, userId);
-        request.input('userLeagueId', sql.Int, userLeagueId);
         request.input('dateSimulated', sql.VarChar, now.toISOString());
         request.query(query, (err, recordset) => {
           if (err) reject(err);

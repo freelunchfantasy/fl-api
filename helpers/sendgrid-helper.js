@@ -36,4 +36,30 @@ export default class SendgridHelper {
         console.log(err);
       });
   }
+
+  sendFeedbackMessageEmail(inputs) {
+    console.log('HEYYYYYYYYYYYYYYYYYYYY');
+    console.log(inputs.sender_email);
+    const msg = {
+      to: 'freelunchfantasy@gmail.com',
+      from: 'freelunchfantasy@gmail.com',
+      templateId: 'd-14e9546048ab412d8aab8bba4b2f4631',
+      dynamicTemplateData: {
+        sender_email: inputs.sender_email,
+        sender_name: inputs.sender_name,
+        message: inputs.message,
+        date_submitted: inputs.date_submitted,
+      },
+    };
+
+    sgMail
+      .send(msg)
+      .then(response => {
+        console.log(response[0].statusCode);
+        console.log(response[0].headers);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 }
