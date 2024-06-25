@@ -25,14 +25,16 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'freelunch-api' 
   displayName: 'Publish npm artifact'
+  
+- task: ArchiveFiles@2
+  inputs:
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+      includeRootFolder: false
+  displayName: 'Zip Artifact'
 
 - script:
     ls $(Build.ArtifactStagingDirectory)
   displayName: 'testing'
-
-- script:
-    ls $(Build.ArtifactStagingDirectory)/..
-  displayName: 'testing again'
 
 - task: AzureRmWebAppDeployment@4
   inputs:
