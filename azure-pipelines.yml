@@ -27,8 +27,12 @@ steps:
   
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/testing' 
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'freelunch-api' 
+
+- script:
+    ls $(Build.ArtifactStagingDirectory)
+  displayName: 'testing'
 
 - task: AzureRmWebAppDeployment@4
   inputs:
@@ -36,6 +40,6 @@ steps:
     azureSubscription: 'FreeLunchFantasySubscription(e2d91e5f-7659-43aa-bffc-22aed71fcb48)'
     appType: 'webAppLinux'
     WebAppName: 'freelunch-api'
-    package: '$(Build.ArtifactStagingDirectory)/*.zip'
+    package: '$(Build.ArtifactStagingDirectory)/**/.zip'
     RuntimeStack: 'NODE|18-lts'
     StartupCommand: 'pm2 start ecosystem.config.cjs'
