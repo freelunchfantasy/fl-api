@@ -16,10 +16,6 @@ steps:
 - script: |
     npm install
   displayName: 'npm install'
-  
-- script: |
-    npm run build
-  displayName: 'npm build'
 
 - task: CopyFiles@2
   inputs:
@@ -44,6 +40,6 @@ steps:
     azureSubscription: 'FreeLunchFantasySubscription(e2d91e5f-7659-43aa-bffc-22aed71fcb48)'
     appType: 'webAppLinux'
     WebAppName: 'freelunch-api'
-    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.*'
     RuntimeStack: 'NODE|18-lts'
     StartupCommand: 'pm2 start ecosystem.config.cjs'
