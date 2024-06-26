@@ -3,7 +3,8 @@
         "bodyLimit": "100kb",
         "corsHeaders": ["Link"],
         "allowedOrigins": [
-            "http://localhost:4200"
+            "http://localhost:4200",
+            "https://freelunch-api.azurewebsites.net"
         ],
         "tokenExpiration": 3600000,
         "cookieDomain": ".freelunchfantasy.com",
