@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-local": "pm2 start ecosystem.config.cjs --env local",
-    "start-dev": "pm2 start ecosystem.config.cjs --env dev"
+    "start-dev": "pm2 start ecosystem.config.cjs --env dev",
+    "start": "pm2 start ecosystem.config.cjs"
   },
   "author": "",
   "license": "ISC",

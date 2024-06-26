@@ -23,7 +23,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [2, 3, 4, 5, 6, 8, 9, 7, 10, 12, 11, 2, 3],
+        schedule: [2, 3, 4, 5, 6, 8, 9, 7, 10, 12, 11, 2, 3, 4],
         scores: [],
         outcomes: [],
         roster: [
@@ -202,7 +202,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 711.42,
         pointsAgainst: 699.6,
-        schedule: [1, 5, 3, 6, 4, 9, 7, 8, 10, 12, 3, 1, 11],
+        schedule: [1, 5, 3, 6, 4, 9, 7, 8, 10, 12, 3, 1, 11, 5],
         scores: [],
         outcomes: [],
         roster: [
@@ -370,7 +370,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 553.12,
         pointsAgainst: 552.8,
-        schedule: [6, 1, 2, 4, 5, 7, 8, 9, 11, 10, 2, 12, 1],
+        schedule: [6, 1, 2, 4, 5, 7, 8, 9, 11, 10, 2, 12, 1, 6],
         scores: [],
         outcomes: [],
         roster: [
@@ -538,7 +538,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [5, 6, 1, 3, 2, 12, 11, 10, 9, 8, 7, 5, 6],
+        schedule: [5, 6, 1, 3, 2, 12, 11, 10, 9, 8, 7, 5, 6, 1],
         scores: [],
         outcomes: [],
         roster: [
@@ -706,7 +706,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 743.12,
         pointsAgainst: 512.8,
-        schedule: [4, 2, 6, 1, 3, 10, 12, 11, 7, 9, 6, 4, 8],
+        schedule: [4, 2, 6, 1, 3, 10, 12, 11, 7, 9, 6, 4, 8, 2],
         scores: [],
         outcomes: [],
         roster: [
@@ -848,7 +848,7 @@ export default class DemoLeagueHelper {
             position: 'K',
             rank: 6,
             proTeam: 'SEA',
-            projectedAveragePoints: 83,
+            projectedAveragePoints: 8.3,
             projectedTotalPoints: 139,
             percentStarted: 75,
             stats: {},
@@ -874,7 +874,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [3, 4, 5, 2, 1, 11, 10, 12, 8, 7, 5, 9, 4],
+        schedule: [3, 4, 5, 2, 1, 11, 10, 12, 8, 7, 5, 9, 4, 3],
         scores: [],
         outcomes: [],
         roster: [
@@ -1053,7 +1053,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [8, 9, 10, 11, 12, 3, 2, 1, 5, 6, 4, 8, 9],
+        schedule: [8, 9, 10, 11, 12, 3, 2, 1, 5, 6, 4, 8, 9, 10],
         scores: [],
         outcomes: [],
         roster: [
@@ -1221,7 +1221,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [7, 11, 9, 12, 10, 1, 3, 2, 6, 4, 9, 7, 5],
+        schedule: [7, 11, 9, 12, 10, 1, 3, 2, 6, 4, 9, 7, 5, 11],
         scores: [],
         outcomes: [],
         roster: [
@@ -1389,7 +1389,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [12, 7, 8, 10, 11, 2, 1, 3, 4, 5, 8, 6, 7],
+        schedule: [12, 7, 8, 10, 11, 2, 1, 3, 4, 5, 8, 6, 7, 12],
         scores: [],
         outcomes: [],
         roster: [
@@ -1557,7 +1557,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [11, 12, 7, 9, 8, 5, 6, 4, 2, 3, 1, 11, 12],
+        schedule: [11, 12, 7, 9, 8, 5, 6, 4, 2, 3, 1, 11, 12, 7],
         scores: [],
         outcomes: [],
         roster: [
@@ -1725,7 +1725,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [10, 8, 12, 7, 9, 6, 4, 5, 3, 1, 12, 10, 2],
+        schedule: [10, 8, 12, 7, 9, 6, 4, 5, 3, 1, 12, 10, 2, 8],
         scores: [],
         outcomes: [],
         roster: [
@@ -1893,7 +1893,7 @@ export default class DemoLeagueHelper {
         ties: 0,
         pointsFor: 753.12,
         pointsAgainst: 512.8,
-        schedule: [9, 10, 11, 8, 7, 4, 5, 6, 1, 2, 11, 3, 10],
+        schedule: [9, 10, 11, 8, 7, 4, 5, 6, 1, 2, 11, 3, 10, 9],
         scores: [],
         outcomes: [],
         roster: [
@@ -2024,7 +2024,7 @@ export default class DemoLeagueHelper {
             position: 'D/ST',
             rank: 15,
             proTeam: 'NYG',
-            projectedAveragePoints: 64,
+            projectedAveragePoints: 6.4,
             projectedTotalPoints: 100,
             percentStarted: 44,
             stats: {},
