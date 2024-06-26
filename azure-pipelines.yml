@@ -1,53 +1,78 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Node.js Express Web App to Linux on Azure
+# Build a Node.js Express app and deploy it to Azure as a Linux web app.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
 - develop
 
-pool:
-  vmImage: ubuntu-latest
+variables:
 
-steps:
+  # Azure Resource Manager connection created during pipeline creation
+  azureSubscription: '15206961-b682-45de-9b86-72aac55b37bc'
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'
-  displayName: 'Install Node.js'
+  # Web app name
+  webAppName: 'freelunch-api'
 
-- script: |
-    npm install
-  displayName: 'npm install'
+  # Environment name
+  environmentName: 'freelunch-api'
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: 'dist'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: $(Build.ArtifactStagingDirectory)/dist.zip
-    replaceExistingArchive: true
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
 
-- task: CopyFiles@2
-  displayName: 'Copy files'
-  inputs:
-    SourceFolder: '$(Build.ArtifactStagingDirectory)'
-    Contents: '**/*.zip'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/drop'
-    
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Build Artifact'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/drop'
-    ArtifactName: 'drop'
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
 
-- task: AzureRmWebAppDeployment@4
-  displayName: 'Deploy Azure App Service'
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'FreeLunchFantasySubscription(e2d91e5f-7659-43aa-bffc-22aed71fcb48)'
-    appType: 'webAppLinux'
-    WebAppName: 'freelunchfantasy'
-    packageForLinux: '$(Build.ArtifactStagingDirectory)/drop/dist.zip'
-    RuntimeStack: 'NODE|18-lts'
-    StartupCommand: 'pm2 serve /home/site/wwwroot/freelunch-api --no-daemon --spa'
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm install
+        npm run build --if-present
+        npm run test --if-present
+      displayName: 'npm install, build and test'
+
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
+
+    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      artifact: drop
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: $(environmentName)
+    pool:
+      vmImage: $(vmImageName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Azure Web App Deploy: freelunch-api'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              appType: webAppLinux
+              appName: $(webAppName)
+              runtimeStack: 'NODE|10.10'
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              startUpCommand: 'npm run start'
