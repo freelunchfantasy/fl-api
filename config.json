@@ -4,7 +4,7 @@
         "corsHeaders": ["Link"],
         "allowedOrigins": [
             "http://localhost:4200",
-            "https://freelunch-api.azurewebsites.net"
+            "https://freelunchfantasy.azurewebsites.net/login"
         ],
         "tokenExpiration": 3600000,
         "cookieDomain": ".freelunchfantasy.com",

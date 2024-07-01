@@ -34,7 +34,7 @@ const configureThirdPartyMiddleware = app => {
   const corsUrls = JSON.parse(rawCORSUrls);
   const corsOptions = {
     exposedHeaders: appConfig.corsHeaders,
-    origin: [...appConfig.allowedOrigins, ...corsUrls],
+    origin: [...appConfig.allowedOrigins, ...corsUrls, 'https://freelunchfantasy.azurewebsites.net'],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Cookie'],
     credentials: true,
