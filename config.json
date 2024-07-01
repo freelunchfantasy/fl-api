@@ -10,5 +10,16 @@
         "cookieDomain": ".freelunchfantasy.com",
         "secureCookie": false,
         "cookieTokenAttribute": "session"
+    },
+    "production": {
+        "bodyLimit": "100kb",
+        "corsHeaders": ["Link"],
+        "allowedOrigins": [
+            "https://freelunchfantasy.azurewebsites.net/login"
+        ],
+        "tokenExpiration": 3600000,
+        "cookieDomain": ".freelunchfantasy.com",
+        "secureCookie": false,
+        "cookieTokenAttribute": "session"
     }
 }
