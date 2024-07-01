@@ -33,7 +33,7 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: node-app
+          name: freelunch-api
           path: release.zip
 
   deploy:
@@ -49,7 +49,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: node-app
+          name: freelunch-api
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
