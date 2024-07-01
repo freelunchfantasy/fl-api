@@ -75,4 +75,4 @@ stages:
               appName: $(webAppName)
               runtimeStack: 'NODE|18-lts'
               package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-              startUpCommand: 'npm run start'
+              startUpCommand: 'npm run deploy-prod'
