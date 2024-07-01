@@ -106,6 +106,10 @@ const init = () => {
   const authRouter = auth(preMiddlewareFn, configurePostRequestMiddleware);
   app.use('/auth', authRouter);
 
+  app.get('/', (req, res) => {
+    res.json({ message: 'Hello from Free Lunch!' });
+  });
+
   startServer(app);
   return app;
 };

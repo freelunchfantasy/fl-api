@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freelunch-api-qa
+spec:
+  selector:
+    matchLabels:
+      app: freelunch-api-qa
+  template:
+    metadata:
+      labels:
+        app: freelunch-api-qa
+    spec:
+      containers:
+        - name: freelunch-api-qa
+          image: 905418381743.dkr.ecr.us-east-2.amazonaws.com/freelunch-api-qa:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - name: tcp
+              containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: freelunch-api-qa
+spec:
+  selector:
+    app: freelunch-api-qa
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer

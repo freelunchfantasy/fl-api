@@ -38,8 +38,6 @@ export default class SendgridHelper {
   }
 
   sendFeedbackMessageEmail(inputs) {
-    console.log('HEYYYYYYYYYYYYYYYYYYYY');
-    console.log(inputs.sender_email);
     const msg = {
       to: 'freelunchfantasy@gmail.com',
       from: 'freelunchfantasy@gmail.com',

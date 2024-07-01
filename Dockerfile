@@ -2,13 +2,16 @@
 FROM node:18
 
 # Set work directory
-WORKDIR /www
+WORKDIR /usr/src/app
 
-# Copy source to /www
-COPY . /www
+# Copy source
+COPY . .
 
 # Install dependencies
 RUN npm install
 
+# Export port
+EXPOSE 3000
+
 # Start command
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "deploy-prod"]
