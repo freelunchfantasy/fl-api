@@ -39,7 +39,7 @@ const configureThirdPartyMiddleware = app => {
     allowedHeaders: ['Content-Type', 'Cookie'],
     credentials: true,
   };
-  app.use(cors(corsOptions));
+  app.use(cors());
   app.use(bodyParser.json());
   app.use(cookieParser());
   return app;
