@@ -4,10 +4,10 @@
         "corsHeaders": ["Link"],
         "allowedOrigins": [
             "http://localhost:4200",
-            "https://freelunchfantasy.azurewebsites.net/login"
+            "https://freelunchfantasy.azurewebsites.net"
         ],
         "tokenExpiration": 3600000,
-        "cookieDomain": ".freelunchfantasy.com",
+        "cookieDomain": "http://localhost:4200",
         "secureCookie": false,
         "cookieTokenAttribute": "session"
     },
@@ -15,7 +15,7 @@
         "bodyLimit": "100kb",
         "corsHeaders": ["Link"],
         "allowedOrigins": [
-            "https://freelunchfantasy.azurewebsites.net/login"
+            "https://freelunchfantasy.azurewebsites.net"
         ],
         "tokenExpiration": 3600000,
         "cookieDomain": ".freelunchfantasy.com",

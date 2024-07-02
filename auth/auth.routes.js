@@ -1,6 +1,7 @@
 import jwt from 'jwt-simple';
 import logger from 'winston';
 import bcrypt from 'bcrypt';
+import { getConfig } from '../config.js';
 import { configDotenv } from 'dotenv';
 import EntitiesDbo from '../db/sql-clients/entities-dbo.js';
 import DataProcessingHelper from '../helpers/data-processing-helper.js';
@@ -17,6 +18,7 @@ const sendgridHelper = new SendgridHelper();
 configDotenv();
 const key = process.env.JWT_PUBLIC_KEY;
 const saltRounds = 10;
+const appConfig = getConfig(process.env.NODE_ENV || 'production');
 
 /**
  * Method for logging a user in
@@ -40,6 +42,13 @@ export async function login(req, res, next) {
               user.sessionToken = encodeSessionJwt(user);
               logger.info(`Successfully logged in user ${user.id}`);
               req['user'] = { id: user.id };
+              logger.info(process.env.DNS_ZONE);
+              res.cookie('session', user.sessionToken, {
+                maxAge: 3600000,
+                httpOnly: true,
+                domain: appConfig.cookieDomain,
+                secure: false,
+              });
               res.json({ user: user, success: true });
               return next();
             })
