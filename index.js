@@ -14,7 +14,7 @@ import api from './api/index.js';
 import checkToken from './middleware/check-token.js';
 import updateLastActivity from './middleware/update-last-activity.js';
 
-const appConfig = getConfig(process.env.NODE_ENV);
+const appConfig = getConfig(process.env.NODE_ENV || 'production');
 
 // Configure the logger
 const configureLogger = app => {
