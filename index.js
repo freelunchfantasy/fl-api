@@ -107,7 +107,7 @@ const init = () => {
   app.use('/auth', authRouter);
 
   app.get('/', (req, res) => {
-    res.json({ message: 'Hello from Free Lunch yo, but a new version!' });
+    res.json({ message: 'PLEASE WORK HOLY FUCK' });
   });
 
   startServer(app);
