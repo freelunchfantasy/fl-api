@@ -1,14 +1,11 @@
 import constants from '../lib/constants.js';
 import { ForbiddenAccessError } from '../lib/errors.js';
 import jwt from 'jwt-simple';
-import logger from 'winston';
 
-export default (config, logger, key) => {
+export default (logger, key) => {
   function checkToken(req, res, next) {
     try {
-      logger.info(`KEY: ${key}`);
-      const token = req.cookies[config.cookieTokenAttribute];
-      logger.info(`TOKEN: ${token}`);
+      const token = req.headers.authorization.replace('Bearer ', '');
       processToken(token);
     } catch (err) {
       req.errType = constants.errorTypes.UNAUTHORIZED;

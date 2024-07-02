@@ -42,14 +42,6 @@ export async function login(req, res, next) {
               user.sessionToken = encodeSessionJwt(user);
               logger.info(`Successfully logged in user ${user.id}`);
               req['user'] = { id: user.id };
-              logger.info(process.env.DNS_ZONE);
-              res.cookie('session', user.sessionToken, {
-                maxAge: 3600000,
-                httpOnly: true,
-                domain: appConfig.cookieDomain,
-                secure: true,
-                sameSite: 'None',
-              });
               res.json({ user: user, success: true });
               return next();
             })
@@ -78,13 +70,6 @@ export async function login(req, res, next) {
         logger.info(`Successfully logged in user ${user.id}`);
         req['user'] = { id: user.id };
         res.json({ user: user, success: true });
-        res.cookie('session', user.sessionToken, {
-          maxAge: 3600000,
-          httpOnly: true,
-          domain: 'http://localhost:4200',
-          secure: false,
-        });
-        logger.info('SET RES COOKIE');
         logger.info(res);
         return next();
       })

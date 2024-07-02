@@ -36,7 +36,7 @@ const configureThirdPartyMiddleware = app => {
     exposedHeaders: appConfig.corsHeaders,
     origin: [...appConfig.allowedOrigins, ...corsUrls],
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Cookie'],
+    allowedHeaders: ['Content-Type', 'Cookie', 'Authorization'],
     credentials: true,
   };
   app.use(cors(corsOptions));
@@ -49,15 +49,7 @@ const configureThirdPartyMiddleware = app => {
 const configureCustomMiddleware = app => {
   // Use checkToken middleware
   const jwtPublicKey = process.env.JWT_PUBLIC_KEY;
-  const checkTokenMiddleware = checkToken(
-    {
-      cookieTokenAttribute: appConfig.cookieTokenAttribute,
-      cookieDomain: appConfig.cookieDomain,
-      cookieSecure: ['production'].includes(process.env.NODE_ENV),
-    },
-    logger,
-    jwtPublicKey
-  );
+  const checkTokenMiddleware = checkToken(logger, jwtPublicKey);
   app.use(checkTokenMiddleware);
 };
 
