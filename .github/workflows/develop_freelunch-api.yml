@@ -25,6 +25,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6AE6AFC3E55546A68301DE1319546E5A }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4F3BB50DBB424D53BDDF69AA880C673D }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_107EB6081D30417CAD6D49A5CCE54653 }}
 
       - name: Deploy to Azure App Service
         id: deploy-to-webapp
@@ -33,4 +40,4 @@ jobs:
           app-name: 'freelunch-api'
           slot-name: 'Production'
           package: .
-
+          
