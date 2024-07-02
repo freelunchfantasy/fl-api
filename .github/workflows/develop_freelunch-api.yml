@@ -13,6 +13,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Checkout source
@@ -40,4 +42,3 @@ jobs:
           app-name: 'freelunch-api'
           slot-name: 'Production'
           package: .
-          
