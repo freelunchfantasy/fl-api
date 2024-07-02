@@ -1,10 +1,12 @@
 import constants from '../lib/constants.js';
 import { ForbiddenAccessError } from '../lib/errors.js';
 import jwt from 'jwt-simple';
+import logger from 'winston';
 
 export default (config, logger, key) => {
   function checkToken(req, res, next) {
     try {
+      logger.info(`KEY: ${key}`);
       const token = req.cookies[config.cookieTokenAttribute];
       processToken(token);
     } catch (err) {
@@ -21,7 +23,6 @@ export default (config, logger, key) => {
         firstName: decoded.firstName,
         lastName: decoded.lastName,
       };
-
       next();
     }
   }
