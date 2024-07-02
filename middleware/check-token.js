@@ -8,6 +8,7 @@ export default (config, logger, key) => {
     try {
       logger.info(`KEY: ${key}`);
       const token = req.cookies[config.cookieTokenAttribute];
+      logger.info(`TOKEN: ${token}`);
       processToken(token);
     } catch (err) {
       req.errType = constants.errorTypes.UNAUTHORIZED;
