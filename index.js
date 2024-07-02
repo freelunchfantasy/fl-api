@@ -107,7 +107,7 @@ const init = () => {
   app.use('/auth', authRouter);
 
   app.get('/', (req, res) => {
-    res.json({ message: 'PLEASE WORK HOLY FUCK' });
+    res.json({ message: 'PLEASE WORK plzzzzzzzzzzzzzzzzzz' });
   });
 
   startServer(app);
