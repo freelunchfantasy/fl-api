@@ -46,7 +46,7 @@ export async function login(req, res, next) {
               res.cookie('session', user.sessionToken, {
                 maxAge: 3600000,
                 httpOnly: true,
-                domain: config.cookieDomain,
+                domain: appConfig.cookieDomain,
                 secure: true,
                 sameSite: 'None',
               });
