@@ -162,7 +162,7 @@ export default () => {
       return next();
     }
     try {
-      const ls = spawn('python', ['python/get_league.py', leagueId]);
+      const ls = spawn('python3', ['python/get_league.py', leagueId]);
       new Promise((resolve, reject) => {
         // Listen to the `data` event on `stdout`.
         ls.stdout.on('data', data => resolve(`stdout: ${data}`));

@@ -228,14 +228,12 @@ export default class QueryHelper {
     return `INSERT INTO [trade_simulation_share]
                 (
                     user_id
-                  , user_league_id
                   , date_shared
                   , target_email
                 ) OUTPUT Inserted.id
                 VALUES
                 (
                     @userId
-                  , @userLeagueId
                   , @dateShared
                   , @targetEmail
                 )`;
