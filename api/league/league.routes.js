@@ -1,5 +1,6 @@
 import { spawn } from 'child_process';
 import logger from 'winston';
+import axios from 'axios';
 import EntitiesDbo from '../../db/sql-clients/entities-dbo.js';
 import DataProcessingHelper from '../../helpers/data-processing-helper.js';
 import SimulationHelper from '../../helpers/simulation-helper.js';
@@ -162,27 +163,14 @@ export default () => {
       return next();
     }
     try {
-      const ls = spawn('python3', ['python/get_league.py', leagueId]);
-      new Promise((resolve, reject) => {
-        // Listen to the `data` event on `stdout`.
-        ls.stdout.on('data', data => resolve(`stdout: ${data}`));
-        // Listen to the `data` event on `stderr`.
-        ls.stderr.on('data', data => reject(`stderr: ${data}`));
-      })
-        .then(data => {
-          logger.info(`Successfully retrieved data for league ${leagueId}`);
-          const leagueData = JSON.parse(data.slice(data.indexOf('{')));
-          if (userTeamId) syncUserLeague(leagueData, req.user.id, userTeamId, leagueId, 2); // 2 is for ESPN, update later
-          res.json({ ...leagueData, foundLeague: true });
-          next();
-        })
-        .catch(err => {
-          logger.error(`Something went wrong loading league with external id ${leagueId}. Err: ${err}`);
-          res.json({ foundLeague: false });
-          next();
-        });
+      const response = await getLeagueData(leagueId);
+      const leagueData = response.data;
+      logger.info(`Successfully retrieved data for league ${leagueId}`);
+      if (userTeamId) syncUserLeague(leagueData, req.user.id, userTeamId, leagueId, 2); // 2 is for ESPN, update later
+      res.json({ ...leagueData, foundLeague: true });
+      next();
     } catch (err) {
-      logger.error(`Something went wrong when spawning Python process to load league. Erorr: ${err}`);
+      logger.error(`Something went wrong loading league with external id ${leagueId}. Err: ${err}`);
       res.json({ foundLeague: false, message: err });
       next();
     }
@@ -322,6 +310,16 @@ export default () => {
           `Something went wrong syncing user league for ${userId}, external league ${externalLeagueId}. Error ${err}`
         );
       });
+  }
+
+  async function getLeagueData(leagueId) {
+    const path = `https://freelunch-simulator.azurewebsites.net/get_league/${leagueId}`;
+    const response = await makeSimulatorWebRequest(path);
+    return response;
+  }
+
+  async function makeSimulatorWebRequest(targetUrl) {
+    return axios.get(targetUrl);
   }
 
   return {
