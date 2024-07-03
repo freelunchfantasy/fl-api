@@ -161,26 +161,31 @@ export default () => {
       res.json({ ...leagueData, foundLeague: true });
       return next();
     }
-    const ls = spawn('python', ['python/get_league.py', leagueId]);
-
-    new Promise((resolve, reject) => {
-      // Listen to the `data` event on `stdout`.
-      ls.stdout.on('data', data => resolve(`stdout: ${data}`));
-      // Listen to the `data` event on `stderr`.
-      ls.stderr.on('data', data => reject(`stderr: ${data}`));
-    })
-      .then(data => {
-        logger.info(`Successfully retrieved data for league ${leagueId}`);
-        const leagueData = JSON.parse(data.slice(data.indexOf('{')));
-        if (userTeamId) syncUserLeague(leagueData, req.user.id, userTeamId, leagueId, 2); // 2 is for ESPN, update later
-        res.json({ ...leagueData, foundLeague: true });
-        next();
+    try {
+      const ls = spawn('python', ['python/get_league.py', leagueId]);
+      new Promise((resolve, reject) => {
+        // Listen to the `data` event on `stdout`.
+        ls.stdout.on('data', data => resolve(`stdout: ${data}`));
+        // Listen to the `data` event on `stderr`.
+        ls.stderr.on('data', data => reject(`stderr: ${data}`));
       })
-      .catch(err => {
-        logger.info(`Something went wrong loading league with external id ${leagueId}. Err: ${err}`);
-        res.json({ foundLeague: false });
-        next();
-      });
+        .then(data => {
+          logger.info(`Successfully retrieved data for league ${leagueId}`);
+          const leagueData = JSON.parse(data.slice(data.indexOf('{')));
+          if (userTeamId) syncUserLeague(leagueData, req.user.id, userTeamId, leagueId, 2); // 2 is for ESPN, update later
+          res.json({ ...leagueData, foundLeague: true });
+          next();
+        })
+        .catch(err => {
+          logger.error(`Something went wrong loading league with external id ${leagueId}. Err: ${err}`);
+          res.json({ foundLeague: false });
+          next();
+        });
+    } catch (err) {
+      logger.error(`Something went wrong when spawning Python process to load league. Erorr: ${err}`);
+      res.json({ foundLeague: false, message: err });
+      next();
+    }
   }
 
   async function getNflTeams(req, res, next) {
@@ -250,6 +255,7 @@ export default () => {
         next();
       })
       .catch(err => {
+        logger.error(`Something went wront simulating trade for league with id: ${leagueVersions[0].id}`);
         next(err);
       });
   }
