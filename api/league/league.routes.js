@@ -1,4 +1,3 @@
-import { spawn } from 'child_process';
 import logger from 'winston';
 import axios from 'axios';
 import EntitiesDbo from '../../db/sql-clients/entities-dbo.js';

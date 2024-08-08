@@ -36,7 +36,7 @@ const configureThirdPartyMiddleware = app => {
     exposedHeaders: appConfig.corsHeaders,
     origin: [...appConfig.allowedOrigins, ...corsUrls],
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Cookie', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   };
   app.use(cors(corsOptions));

@@ -113,7 +113,7 @@ export async function register(req, res, next) {
                 id: result.id,
                 firstName,
                 lastName,
-                e,
+                email: e,
                 sessionToken,
               },
               success: true,

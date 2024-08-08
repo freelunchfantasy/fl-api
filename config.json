@@ -3,7 +3,7 @@
         "bodyLimit": "100kb",
         "corsHeaders": ["Link"],
         "allowedOrigins": [
-            "localhost",
+            "localhost:4200",
             "http://localhost:4200",
             "https://freelunchfantasy.azurewebsites.net"
         ],
